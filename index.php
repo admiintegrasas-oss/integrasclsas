@@ -1,24 +1,19 @@
 <?php
-include("app/config.php");
-include("layout/sesion.php");
-include("layout/parte1.php");
-include("app/controllers/usuarios/listado_de_usuarios.php");
-include("app/controllers/categorias/listado_de_categoria.php"); 
-include("app/controllers/almacen/listado_de_productos.php");
-include("app/controllers/proveedores/listado_de_proveedores.php");
-include("app/controllers/factura/listado_de_facturas.php");
-include("app/controllers/ventas/listado_de_ventas.php");
-include("app/controllers/egresos/listado_de_egresos.php");
-include("app/controllers/ingresos/listado_de_ingresos.php");
+include("../app/config.php");
+include("../layout/sesion.php");
+include("../layout/parte1.php");
+include("../app/controllers/almacen/listado_de_productos.php");
+$nivel_usuario = $_SESSION['sesion_nivel_usuario'];
+if($nivel_usuario == "Administrador" ){
 ?>
-  <!-- Content Wrapper. Contains page content -->
+<!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">BIENVENIDO <?php echo $nombres_sesion; ?></h1>
+            <h1 class="m-0">LISTADO DE PRODUCTOS</h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -26,225 +21,268 @@ include("app/controllers/ingresos/listado_de_ingresos.php");
     <!-- /.content-header -->
     <!-- Main content -->
     <div class="content">
-        <div class="container-fluid">
-          CONTENIDO PRINCIPAL
-          <br><br>
+      <div class="container-fluid">
           <div class="row">
-            <div class="col-lg-3 col-6"><!-- USUARIOS -->
-              <div class=" small-box bg-warning">
-                <div class="inner">
-                  <?php
-                  $contador_usuarios=0;
-                  foreach($usuarios_datos as $usuarios_datos) {
-                    $contador_usuarios++ ;
-                  }
-                  ?>
-                  <h3><?php echo$contador_usuarios; ?></h3>
-                  <p>Usuarios Registrados</p>
-                </div>
-                <a href="<?php echo $URL;?>/usuarios/create.php">
-                  <div class="icon">
-                    <i class="fas fa-user-plus"></i>
+            <div class="col-md-12">
+              <div class="card card-outline card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Productos registrados</h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                    </button>
                   </div>
-                </a>  
-                <a href="<?php echo $URL;?>/usuarios" class="small-box-footer">
-                  Mas Informacion <i class="fas fa-arrow-circle-right"></i>
-                </a>
-              </div>
-            </div><!-- FIN USUARIOS -->
-            <div class="col-lg-3 col-6"><!-- CATEGORIAS -->
-              <div class=" small-box bg-success"> 
-                <div class="inner">
-                  <?php
-                  $contador_categoria=0;
-                  foreach($categorias_datos as $categorias_datos) {
-                    $contador_categoria++ ;
-                  }
-                  ?>
-                  <h3><?php echo$contador_categoria; ?></h3>
-                  <p>Categorias Registradas</p>
                 </div>
-                <a href="<?php echo $URL;?>/categoria/index.php">
-                  <div class="icon">
-                    <i class="fas fa-list"></i>
-                  </div>
-                </a>  
-                <a href="<?php echo $URL;?>/categoria/index.php" class="small-box-footer">
-                  Mas Informacion <i class="fas fa-arrow-circle-right"></i>
-                </a>
-              </div>
-            </div><!-- FIN CATEGORIAS -->
-              <div class="col-lg-3 col-6"><!-- PRODUCTOS -->
-                <div class=" small-box bg-danger"> 
-                  <div class="inner">
-                    <?php
-                    $contador_productos=0;
-                    foreach($productos_datos as $productos_datos) {
-                      $contador_productos++ ;
-                    }
-                    ?>
-                    <h3><?php echo$contador_productos; ?></h3>
-                    <p>Productos Registrados</p>
-                  </div>
-                  <a href="<?php echo $URL;?>/almacen/index.php">
-                    <div class="icon">
-                      <i class="fas fa-paint-roller"></i>
-                    </div>
-                  </a>  
-                  <a href="<?php echo $URL;?>/almacen/index.php" class="small-box-footer">
-                    Mas Informacion <i class="fas fa-arrow-circle-right"></i>
-                  </a>
-                </div>
-              </div><!-- FIN PRODUCTOS -->
-              <div class="col-lg-3 col-6"><!-- PROVEEDORES -->
-                <div class=" small-box bg-info"> 
-                  <div class="inner">
-                    <?php
-                    $contador_proveedores=0;
-                    foreach($proveedores_datos as $proveedores_datos) {
-                      $contador_proveedores++ ;
-                    }
-                    ?>
-                    <h3><?php echo$contador_proveedores; ?></h3>
-                    <p>Proveedores Registrados</p>
-                  </div>
-                  <a href="<?php echo $URL;?>/proveedores/index.php">
-                    <div class="icon">
-                      <i class="fas fa-truck"></i>
-                    </div>
-                  </a>  
-                  <a href="<?php echo $URL;?>/proveedores/index.php" class="small-box-footer">
-                    Mas Informacion <i class="fas fa-arrow-circle-right"></i>
-                  </a>
-                </div>
-              </div><!-- FIN PROVEEDORES -->       
-              <?php
-              $nivel_usuario = $_SESSION['sesion_nivel_usuario'];
-              if($nivel_usuario == "Administrador") {
-                ?>
-                <div class="col-lg-3 col-6"><!-- COMPRAS -->
-                  <div class=" small-box bg-primary"> 
-                    <div class="inner">
+                <div class="card-body" style="display: block;">
+                  <table id="tabla_usuarios" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th><center>Numero</center></th>
+                    <th><center>Codigo</center></th>
+                    <th><center>Categoria</center></th>
+                    <th><center>Nombre</center></th>
+                    <th><center>Stock</center></th>
+                    <th><center>Precio Compra</center></th>
+                    <th><center>Precio Venta</center></th>
+                    <th><center>Usuario</center></th>
+                    <th><center>Acciones</center></th>
+                  </tr>
+                  </thead>
+                  <tbody>
                       <?php
-                      $contador_facturas=0;
-                      foreach($facturas_datos as $facturas_datos) {
-                        $contador_facturas++ ;
+                      $contador = 1;
+                      foreach ($productos_datos as $producto_dato) {?>
+                        <tr>
+                            <td><center><?php echo $contador++; ?></center></td>
+                            <td><center><?php echo $producto_dato['codigo']; ?></center></td>
+                            <td><center><?php echo $producto_dato['categoria']; ?></center></td>
+                            <td><center><?php echo $producto_dato['nombre']; ?></center></td>
+                            <td><center>
+                              <?php 
+                                if ($producto_dato['stock'] <= 0) {
+                                  echo "<span class='badge badge-danger'>".$producto_dato['stock']."</span>";
+                                } else {
+                                  if ($producto_dato['stock'] < $producto_dato['stock_minimo']) {
+                                    echo "<span class='badge badge-warning'>".$producto_dato['stock']."</span>";
+                                  } else {
+                                    if ($producto_dato['stock'] > $producto_dato['stock_maximo']) {
+                                      echo "<span class='badge badge-info'>".$producto_dato['stock']."</span>";
+                                    }
+                                    else {
+                                      echo "<span class='badge badge-success'>".$producto_dato['stock']."</span>";
+                                    }
+                                  }
+                                }
+                              ?>
+                            </center></td>
+                            <td><center>$ <?php echo number_format($producto_dato['precio_compra'], 0, ',', '.'); ?></center></td>
+                            <td><center>$ <?php echo number_format($producto_dato['precio_venta'], 0, ',', '.'); ?></center></td>
+                            <td><center><?php echo $producto_dato['email']; ?></center></td>
+                            <td><center>
+                              <div class="btn-group">
+                                  <?php
+                                  $nivel_usuario = $_SESSION['sesion_nivel_usuario'];
+                                  if($nivel_usuario == "Administrador" ){?>
+                                    <a href="<?php echo $URL; ?>/factura/index.php?id_producto=<?php echo $producto_dato['id_producto']; ?>" class="btn btn-info"><i class="fa fa-plus"></i>  AGREGAR</a>
+                                    <?php
+                                  }
+                                  ?>
+                                <a href="<?php echo $URL; ?>/almacen/update.php?id_producto=<?php echo $producto_dato['id_producto']; ?>" class="btn btn-success"><i class="fa fa-pencil-alt"></i>  MODIFICAR</a>
+                                <a href="<?php echo $URL; ?>/almacen/delete.php?id_producto=<?php echo $producto_dato['id_producto']; ?>" class="btn btn-danger"><i class="fa fa-trash"></i>  ELIMINAR</a>
+                              </div>
+                        </tr>
+                        <?php
                       }
                       ?>
-                      <h3><?php echo$contador_facturas; ?></h3>
-                      <p>Compras Registradas</p>
-                    </div>
-                    <a href="<?php echo $URL;?>/compras/create.php">
-                      <div class="icon">
-                        <i class="fas fa-briefcase"></i>
-                      </div>
-                    </a>  
-                    <a href="<?php echo $URL;?>/compras/index.php" class="small-box-footer">
-                      Mas Informacion <i class="fas fa-arrow-circle-right"></i>
-                    </a>
-                  </div>
-                </div><!-- FIN COMPRAS -->
-                <div class="col-lg-3 col-6"><!-- EGRESOS -->
-                <div class=" small-box bg-dark-warning"> 
-                  <div class="inner">
-                    <?php
-                    $contador_egresos=0;
-                    foreach($egresos_datos as $egresos_datos) {
-                      $contador_egresos++ ;
-                    }
-                    ?>
-                    <h3><?php echo$contador_egresos; ?></h3>
-                    <p>Egresos Registrados</p>
-                  </div>
-                  <a href="<?php echo $URL;?>/egresos/create.php">
-                    <div class="icon">
-                      <i class="fas fa-arrow-up"></i>
-                    </div>
-                  </a>  
-                  <a href="<?php echo $URL;?>/egresos/index.php" class="small-box-footer">
-                    Mas Informacion <i class="fas fa-arrow-circle-right"></i>
-                  </a>
-               </div>
-              </div><!-- FIN EGRESOS -->
-              <div class="col-lg-3 col-6"><!-- INGRESOS -->
-                <div class=" small-box bg-light"> 
-                  <div class="inner">
-                    <?php
-                    $contador_ingresos=0;
-                    foreach($ingresos_datos as $ingresos_datos) {
-                      $contador_ingresos++ ;
-                    }
-                    ?>
-                    <h3><?php echo$contador_ingresos; ?></h3>
-                    <p>Ingresos Registrados</p>
-                  </div>
-                  <a href="<?php echo $URL;?>/ingresos/create.php">
-                    <div class="icon">
-                      <i class="fas fa-arrow-down"></i>
-                    </div>
-                  </a>  
-                  <a href="<?php echo $URL;?>/ingresos/index.php" class="small-box-footer">
-                    Mas Informacion <i class="fas fa-arrow-circle-right"></i>
-                  </a>
-               </div>
-              </div><!-- FIN INGRESOS -->
-              <div class="col-lg-3 col-6"><!-- REPORTE DE VENTAS,INGRESOS Y SALIDAS -->
-                <div class=" small-box bg-info"> 
-                  <div class="inner">
-                    <h3>Libro Diario</h3>
-                    <p>Reporte de Ventas, Ingresos y Salidas</p>
-                  </div>
-                  <a href="<?php echo $URL;?>/libros/index.php">
-                    <div class="icon">
-                      <i class="fas fa-money-bill"></i>
-                    </div>
-                  </a>  
-                  <a href="<?php echo $URL;?>/libros/index.php" class="small-box-footer">
-                    Mas Informacion <i class="fas fa-arrow-circle-right"></i>
-                  </a>
-               </div>
-              </div><!-- FIN LIBROS -->
-                <?php
-              }?>
-              <div class="col-lg-3 col-6"><!-- VENTAS -->
-                <div class=" small-box bg-secondary"> 
-                  <div class="inner">
-                    <?php
-                    $contador_ventas=0;
-                    foreach($ventas_lista_datos as $ventas_lista_datos) {
-                      $contador_ventas++ ;
-                    }
-                    ?>
-                    <h3><?php echo$contador_ventas; ?></h3>
-                    <p>Ventas Registradas</p>
-                  </div>
-                  <a href="<?php echo $URL;?>/ventas/create.php">
-                    <div class="icon">
-                      <i class="fas fa-cart-plus"></i>
-                    </div>
-                  </a>  
-                  <a href="<?php echo $URL;?>/ventas/index.php" class="small-box-footer">
-                    Mas Informacion <i class="fas fa-arrow-circle-right"></i>
-                  </a>
-               </div>
-              </div><!-- FIN VENTAS -->
-            </div><!-- /.container-fluid -->
-        </div>
-      </div>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-    <div class="p-3">
-      <h5>Title</h5>
-      <p>Sidebar content</p>
+                  </tbody>
+                  <tfoot>
+                  <tr>
+                    <th><center>Numero</center></th>
+                    <th><center>Codigo</center></th>
+                    <th><center>Categoria</center></th>
+                    <th><center>Nombre</center></th>
+                    <th><center>Stock</center></th>
+                    <th><center>Precio Compra</center></th>
+                    <th><center>Precio Venta</center></th>
+                    <th><center>Usuario</center></th>
+                    <th><center>Acciones</center></th>
+                  </tr>
+                  </tfoot>
+                </table>               
+                </div>
+              </div>
+            </div>
+          </div>
     </div>
-  </aside>
-  <!-- /.control-sidebar -->
-<?php include("layout/mensajes.php");?>
-<?php include("layout/parte2.php"); ?>
+  </div>
 
- 
+<?php 
+include("../layout/mensajes.php");
+include("../layout/parte2.php"); ?>
+<script>
+  $(function () {
+    $("#tabla_usuarios").DataTable({
+      "pageLength": 25,
+      "language": {
+        "emptyTable": "No hay datos disponibles en la tabla",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Productos",
+        "infoEmpty": "Mostrando 0 a 0 de 0 Productos",
+        "infoFiltered": "(filtrado de _MAX_ Productos totales)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Productos",
+        "loadingRecords": "Cargando...",
+        "search": "Buscar:",
+        "zeroRecords": "No se encontraron resultados",
+          "paginate": {
+              "first": "Primero",
+              "last": "Último",
+              "next": "Siguiente",
+              "previous": "Anterior"
+            },
+            "buttons": {
+              "copy": "Copiar",
+              "csv": "CSV",
+              "excel": "Excel",
+              "pdf": "PDF",
+              "print": "Imprimir",
+              "colvis": "Visibilidad de columnas"
+            } 
+      },
+      "responsive": true, "lengthChange": true, "autoWidth": false,
+      "buttons": [ "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#tabla_usuarios_wrapper .col-md-6:eq(0)');
+  });
+</script>
+<?php
+}
+else{
+?>
+<!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">LISTADO DE PRODUCTOS</h1>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content">
+      <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card card-outline card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Productos registrados</h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body" style="display: block;">
+                  <table id="tabla_usuarios" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th><center>Numero</center></th>
+                    <th><center>Codigo</center></th>
+                    <th><center>Categoria</center></th>
+                    <th><center>Nombre</center></th>
+                    <th><center>Stock</center></th>
+                    <th><center>Precio Venta</center></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                      <?php
+                      $contador = 1;
+                      foreach ($productos_datos as $producto_dato) {?>
+                        <tr>
+                            <td><center><?php echo $contador++; ?></center></td>
+                            <td><center><?php echo $producto_dato['codigo']; ?></center></td>
+                            <td><center><?php echo $producto_dato['categoria']; ?></center></td>
+                            <td><center><?php echo $producto_dato['nombre']; ?></center></td>
+                            <td><center>
+                              <?php 
+                                if ($producto_dato['stock'] <= 0) {
+                                  echo "<span class='badge badge-danger'>".$producto_dato['stock']."</span>";
+                                } else {
+                                  if ($producto_dato['stock'] < $producto_dato['stock_minimo']) {
+                                    echo "<span class='badge badge-warning'>".$producto_dato['stock']."</span>";
+                                  } else {
+                                    if ($producto_dato['stock'] > $producto_dato['stock_maximo']) {
+                                      echo "<span class='badge badge-info'>".$producto_dato['stock']."</span>";
+                                    }
+                                    else {
+                                      echo "<span class='badge badge-success'>".$producto_dato['stock']."</span>";
+                                    }
+                                  }
+                                }
+                              ?>
+                            </center></td>
+                            <td><center>$ <?php echo number_format($producto_dato['precio_venta'],0,',','.'); ?></center></td>      
+                        </tr>
+                        <?php
+                      }
+                      ?>
+                  </tbody>
+                  <tfoot>
+                  <tr>
+                    <th><center>Numero</center></th>
+                    <th><center>Codigo</center></th>
+                    <th><center>Categoria</center></th>
+                    <th><center>Nombre</center></th>
+                    <th><center>Stock</center></th>
+                    <th><center>Precio Venta</center></th>
+                  </tr>
+                  </tfoot>
+                </table>               
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+  </div>
+
+<?php 
+include("../layout/mensajes.php");
+include("../layout/parte2.php"); ?>
+<script>
+  $(function () {
+    $("#tabla_usuarios").DataTable({
+      "pageLength": 25,
+      "language": {
+        "emptyTable": "No hay datos disponibles en la tabla",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Productos",
+        "infoEmpty": "Mostrando 0 a 0 de 0 Productos",
+        "infoFiltered": "(filtrado de _MAX_ Productos totales)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ Productos",
+        "loadingRecords": "Cargando...",
+        "search": "Buscar:",
+        "zeroRecords": "No se encontraron resultados",
+          "paginate": {
+              "first": "Primero",
+              "last": "Último",
+              "next": "Siguiente",
+              "previous": "Anterior"
+            },
+            "buttons": {
+              "copy": "Copiar",
+              "csv": "CSV",
+              "excel": "Excel",
+              "pdf": "PDF",
+              "print": "Imprimir",
+              "colvis": "Visibilidad de columnas"
+            } 
+      },
+      "responsive": true, "lengthChange": true, "autoWidth": false,
+      "buttons": [ "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#tabla_usuarios_wrapper .col-md-6:eq(0)');
+  });
+</script>
+<?php
+}
